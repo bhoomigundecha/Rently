@@ -1,15 +1,23 @@
-'use client';
-import '@/assets/styles/global.css';
+import properties from '@/properties.json';
+import PropertyCard from '@/components/PropertyCard';
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useParams } from 'next/navigation';
 const PropertiesPage = () => {
-    const router = useRouter();
-    const { id } = useParams();
+    
     return(
         <div>
-            <button onClick={()=>router.push('/')} className='bg-blue-500 p-2'>Go Home {id}</button> 
+            <section className="px-4 py-6">
+                <div className="container-xl lg:container m-auto px-4 py-6">
+                    { properties.length === 0 ? (
+                        <p> No properties found </p>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            { properties.map((property)=> (
+                                <PropertyCard key={property._id} property={property}/> 
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </section>
         </div>
     )
 }
