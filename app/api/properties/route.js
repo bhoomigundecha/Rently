@@ -14,3 +14,12 @@ export const GET = async(request) => {
     return new Response('Error', {status : 500});
   }
 } 
+
+export const POST = async(request) => {
+  try{
+    return new Response(JSON.stringify({message : 'Success'}), {status : 200})
+  }catch(err){
+    return new Response(JSON.stringify({message : 'Failed to add property'}), {status : 500})
+
+  }
+}
