@@ -1,20 +1,37 @@
 'use client';
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import logo from '@/assets/images/logo-white.png';
 import profileDefault from '@/assets/images/profile.png';
 import { FaGoogle } from 'react-icons/fa';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-
+import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
 
 
 const NavBar = () => {
+
+  const { data:session } = useSession();
+
+  const profileImage = session?.user?.image;
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [providers, setProviders] = useState(false);
   const pathname = usePathname();
+
+  useEffect(()=>{
+    const setAuthProviders = async() => {
+      const res = await getProviders();
+      setProviders(res);
+    }
+    setAuthProviders();
+  }, []);
+
+
+  
 
   return (
     <div>
@@ -45,7 +62,7 @@ const NavBar = () => {
                 <div className="flex space-x-2">
                   <Link href="/" className={`${pathname==='/' ? 'bg-black' : ''} text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2`}>Home</Link>
                   <Link href="/properties" className={`${pathname==='/properties' ? 'bg-black' : ''} text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2`}>Properties</Link>     
-                  {isLoggedIn && (
+                  {session && (
                     <Link href="/properties/add" className={`${pathname==='/properties/add' ? 'bg-black' : ''} text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2`}>Add a Property</Link>                
                   )} 
                 </div>            
@@ -53,19 +70,22 @@ const NavBar = () => {
             </div>
 
             {/* Right Side Menu (Logged Out) */}
-            {!isLoggedIn && (
+            {!session && (
               <div className="hidden md:block md:ml-6">
                 <div className="flex items-center">
-                  <button className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
-                    <FaGoogle className="text-white mr-2"></FaGoogle>
-                    <span>Login or Register</span>
-                  </button>
+                  {providers && Object.values(providers).map((provider, index)=>(
+                      <button key={index} onClick={()=>signIn(provider.id)} className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
+                        <FaGoogle className="text-white mr-2"></FaGoogle>
+                        <span>Login or Register</span>
+                      </button>
+                  ))}
+                  
                 </div>
               </div>
             )}
 
             {/* Right Side Menu (Logged In) */}
-            {isLoggedIn && (
+            {session && (
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
                 {/* Notifications */}
                 <Link href="/messages" className="relative group">
@@ -85,16 +105,19 @@ const NavBar = () => {
                     <button type="button" className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true" onClick={()=>(setIsProfileOpen((prev)=>!prev))}>
                       <span className="absolute -inset-1.5"></span>
                       <span className="sr-only">Open user menu</span>
-                      <Image className="h-8 w-8 rounded-full" src={profileDefault} alt=""/>
+                      <Image className="h-8 w-8 rounded-full" src={profileImage || profileDefault} alt="" width={40} height={40}/>
                     </button>
                   </div>
 
                   {/* Profile dropdown */}
                   {isProfileOpen && (
                     <div id="user-menu" className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabIndex="-1">
-                      <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1">Your Profile</Link>
-                      <Link href="/properties/saved" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1">Saved Properties</Link>
-                      <button className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1">Sign Out</button>
+                      <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="'user-menu-item-0" onClick={()=>{setIsProfileOpen(false)}}>Your Profile</Link>
+                      <Link href="/properties/saved" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" onClick={()=>{setIsProfileOpen(false)}}>Saved Properties</Link>
+                      <button onClick={()=>{
+                        setIsProfileOpen(false);
+                        signOut();
+                      }} className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id='user-menu-item-2'>Sign Out</button>
                     </div>
                   )}
                 </div>
@@ -109,15 +132,16 @@ const NavBar = () => {
             <div className="space-y-1 px-2 pb-3 pt-2">
               <Link href="/" className={`${pathname==='/' ? 'bg-gray-900' : ''} text-white block rounded-md px-3 py-2 text-base font-medium`}>Home</Link>
               <Link href="/properties" className={`${pathname==='/properties' ? 'bg-gray-900' : ''} text-white block rounded-md px-3 py-2 text-base font-medium`}>Property</Link>
-              {isLoggedIn && (
+              {session && (
                 <Link href="/properties/add" className={`${pathname==='/properties/add' ? 'bg-gray-900' : ''} text-white block rounded-md px-3 py-2 text-base font-medium`}>Add a Property</Link>
               )}
-              {!isLoggedIn && (
-                <button className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2 my-4">
-                  <FaGoogle className="mr-2"></FaGoogle>
-                  <span>Login/Register</span>
-                </button>
-              )}
+              {!session && 
+                providers && Object.values(providers).map((provider, index)=>(
+                  <button key={index} onClick={()=>signIn(provider.id)} className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
+                    <FaGoogle className="text-white mr-2"></FaGoogle>
+                    <span>Login or Register</span>
+                  </button>
+                ))}
             </div>
           </div>
         )}
