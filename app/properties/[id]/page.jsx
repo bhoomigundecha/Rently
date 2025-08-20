@@ -7,6 +7,7 @@ import { FaArrowLeft, FaBookmark, FaShare } from 'react-icons/fa';
 import Link from 'next/link';
 import PropertyDetails from '@/components/PropertyDetails';
 import Spinner from '@/components/Spinner';
+import PropertyImages from '@/components/PropertyImages';
 
 const PropertyPage = () => {
     const { id } = useParams();
@@ -153,6 +154,10 @@ const PropertyPage = () => {
                     </div>
                 </div>
             </section>
+            {!loading && property && (
+                <PropertyImages images={property.images || []} />
+            )}
+
         </>
     )
 }
