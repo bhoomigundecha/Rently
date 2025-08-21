@@ -1,7 +1,9 @@
 import React from 'react'
 import { FaBed, FaBath, FaRulerCombined, FaTimes, FaCheck, FaMapMarker, FaXmark } from 'react-icons/fa'
 const PropertyDetails = ({property}) => {
+    const amenities = ["Wifi", "Full Kitchen", "Washer & Dryer", "Free Parking", "Swimming Pool", "Hot Tub", "24/7 Security", "Wheelchair Accessible", "Elevator Access", "Dishwasher", "Gym/Fitness Center", "Air Conditioning", "Balcony/Patio", "Smart TV", "Coffee Maker"]
   return (
+    
     <div>
         <main>
             <div
@@ -83,7 +85,7 @@ const PropertyDetails = ({property}) => {
             <h3 className="text-lg font-bold mb-6">Amenities</h3>
 
             <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 list-none">
-                {property.amenities.map((amenity, index) => (
+                {amenities.map((amenity, index) => (
                     <li key={index}>
                     <FaCheck className="text-green-600 mr-2 inline-block"></FaCheck> {amenity}
                     </li>
@@ -94,6 +96,9 @@ const PropertyDetails = ({property}) => {
             <div className="bg-white p-6 rounded-lg shadow-md mt-6">
             <div id="map"></div>
             </div>
+
+            
+            
         </main>
 
     </div>

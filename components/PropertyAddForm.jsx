@@ -3,29 +3,30 @@ import {useState, useEffect} from 'react';
 import React from 'react';
 
 const PropertyAddForm = () => {
+
     const [mounted, setMounted] = useState(false);
     const [fields, setFields] = useState({
-        type : 'Apartment', 
-        name : 'Test Property', 
+        type : '', 
+        name : '', 
         description : '',
         location : {
             street : '',
-            city : 'Test City',
-            state : 'Test State',
+            city : '',
+            state : '',
             zipcode : '',
         },
-        beds : '3',
-        baths: '2',
-        square_feet : '1800',
+        beds : '',
+        baths: '',
+        square_feet : '',
         amenities : [],
         rates : {
             weekly : '',
-            monthly : '2000',
+            monthly : '',
             nightly : '',
         },
         seller_info : {
             name : '',
-            email : 'test@test.com',
+            email : '',
             phone : '',
         },
         images : [],
@@ -147,7 +148,7 @@ const PropertyAddForm = () => {
                 className="border rounded w-full py-2 px-3 mb-2"
                 placeholder="eg. Beautiful Apartment In Miami"
                 required
-                value={fields.type}
+                value={fields.name}
                 onChange={handleChange}
             />
         </div>
@@ -221,7 +222,7 @@ const PropertyAddForm = () => {
                 name="beds"
                 className="border rounded w-full py-2 px-3"
                 required
-                value={fields.baths}
+                value={fields.beds}
                 onChange={handleChange}
             />
             </div>
@@ -353,7 +354,7 @@ const PropertyAddForm = () => {
                     name="amenities"
                     value="Wheelchair Accessible"
                     className="mr-2"
-                    checked={fields.amenities.includes('Wheelchair accessible')}
+                    checked={fields.amenities.includes('Wheelchair Accessible')}
                     onChange={handleAmenitiesChange}
                 />
                 <label htmlFor="amenity_wheelchair_accessible"
@@ -449,6 +450,7 @@ const PropertyAddForm = () => {
             </div>
         </div>
 
+
         <div className="mb-4 bg-blue-50 p-4">
             <label className="block text-gray-700 font-bold mb-2"
             >Rates (Leave blank if not applicable)</label
@@ -501,7 +503,7 @@ const PropertyAddForm = () => {
             <input
                 type="text"
                 id="seller_name"
-                name="seller_info.name."
+                name="seller_info.name"
                 className="border rounded w-full py-2 px-3"
                 placeholder="Name"
                 value={fields.seller_info.name}
@@ -569,6 +571,26 @@ const PropertyAddForm = () => {
             Add Property
             </button>
         </div>
+
+        {/* <div style={{background: '#f0f0f0', padding: '10px', margin: '10px 0'}}>
+            <strong>Debug Info:</strong><br/>
+            <button 
+                type="button" 
+                onClick={() => {
+                console.log("Current form state:", fields);
+                console.log("Amenities specifically:", fields.amenities);
+                console.log("Amenities length:", fields.amenities.length);
+                }}
+                style={{background: '#ddd', padding: '5px', margin: '5px'}}
+            >
+                Log Form State
+            </button>
+            
+            <div style={{fontSize: '12px', marginTop: '5px'}}>
+                Current amenities: {JSON.stringify(fields.amenities)}<br/>
+                Length: {fields.amenities.length}
+            </div>
+        </div> */}
     </form>
     );
 }
