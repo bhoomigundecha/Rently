@@ -6,6 +6,8 @@ import { useSession } from 'next-auth/react'
 import profileDefault from '@/assets/images/profile.png'
 import React from 'react'
 import Spinner from '@/components/Spinner';
+import {toast} from 'react-toastify';
+
 const ProfilePage = () => {
     const {data:session} = useSession();
     const profileImage = session?.user?.image;
@@ -46,9 +48,38 @@ const ProfilePage = () => {
         }
     }, [session]);
 
-    const handleDeleteProperty = (propertyId) =>[
+    const handleDeleteProperty = async (propertyId) => {
+        const confirmed = window.confirm('Are you sure you want to delete this proeprty?')
 
-    ]
+        if(!confirmed){
+            return;
+        }
+
+        try{
+            const res = await fetch(`/api/propertites/${propertyId}`, {
+                method : 'DELETE'
+            });
+
+            if(res.status===200){
+                const updatedProperties = properties.filter((property) => property._id !== propertyId)
+                setProperties(updatedProperties);
+
+                // create toast notification to show that you have deleted the property
+                toast.success('Property Deleted')
+
+            }
+            else{
+                toast.error(`Failed to delete the property`)
+            }
+
+        }
+        catch(err){
+            console.log(err)
+
+            toast.error(`Failed to delete the property`)
+            
+        }
+    }
 
   return (
     <section className="bg-blue-50">
@@ -109,10 +140,6 @@ const ProfilePage = () => {
                     </div>
                 ))
               )}
-              
-              
-                  
-              
             </div>
           </div>
         </div>
