@@ -45,7 +45,7 @@ Rently/
 - **Authentication:** [NextAuth.js](https://next-auth.js.org/) with Google Provider
 - **Media Storage:** [Cloudinary](https://cloudinary.com/)
 - **API Integration:** [Zillow Marketplace API](https://www.zillow.com/howto/api/APIOverview.htm)
-- **Database & Models:** MongoDB (via Mongoose) *(adjust if different)*
+- **Database & Models:** MongoDB (via Mongoose) 
 - **Messaging:** Real-time chat system for renter ↔ client communication
 
 ---
